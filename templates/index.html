@@ -1,0 +1,50 @@
+{% extends 'bases/base_index.html' %}
+
+{% block title %} Página Inicial {% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_index.css')}}">
+{% endblock %}
+
+{% block body %}
+
+<div class="page"> 
+    <br>
+    <form action="#" method="POST" class="formLogin">
+        <div class="pai__imagem__titulo">
+            <a class="" href="#">
+                <img class="img__logo__voltar" src="../../static/img/voltar.png" alt="">
+            </a>
+            <h1 class="tit_principal">Login Usuário</h1>
+        </div>
+        <img src="{{ url_for('static', filename='img/cliente.png')}}" id="foto_prof" alt="">
+        {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+        <br>
+        {% for message in messages %}
+        <div class="alert alert-primary" role="alert">
+            <strong> {{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% endwith %}
+        <p class="primeiro__parag">Digite os seus dados de acesso no campo abaixo.</p>
+        
+        <label class="form__label__cli" for="username">Usuário:</label>
+        <input class="input" type="text" name="username" placeholder="informe um nome de usuário" autofocus="true" />
+        <label class="form__label__cli" for="password">Senha:</label>
+        <input class="input" type="password" name="senha" placeholder="Digite sua senha" />
+        <a class="link__senha" href="/">Esqueci minha senha</a>
+        <div class="botoes__pai">
+            <input type="submit" name="trocar_senha" value="Acessar" class="btn btn-dark btns" />
+            <a href="#" class="btn btn-success btns">Novo Cadastro</a>
+        </div>
+        
+    </form>
+    
+</div>
+
+{% endblock %}
