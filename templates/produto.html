@@ -1,0 +1,64 @@
+{% extends 'bases/base_logado.html' %}
+
+{% block title %} Detalhes do produto {% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_lista.css')}}">
+{% endblock %}
+
+{% block content %}
+
+
+    
+        
+    
+        <div class="page-header pai__tit">
+            <h1 class="tit__principal">Detalhes do produto {{produto.nome}}</h1>
+        </div>
+        <table class="table table-dark table-striped table-responsive table-bordered tabela ">
+            <thead class="thead-default">
+                <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preco</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>{{produto.nome}}</td>
+                        <td>{{produto.categoria}}</td>
+                        <td>{{produto.preco}}</td>
+                        <td>{{produto.descricao}}</td>
+                    </tr>
+            </tbody>
+        </table>  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-danger text-light">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Aviso!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Tem certeza que deseja excluir o produto?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary bg-info" data-bs-dismiss="modal">Cancelar</button>
+           <a class="btn btn-dark" href="{{ url_for('deletar_produto', id=produto.id) }}">Confirmar</a>
+        </div>
+      </div>
+    </div>
+  </div>      
+        <div class="pai__botoes">
+            <button type="button" class="btns btn btn-danger text-white border border-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Excluir produto
+              </button>
+        </div>
+    </div>
+    <script>
+          
+    </script>
+    
+{% endblock %}

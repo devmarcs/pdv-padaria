@@ -1,11 +1,23 @@
-{% extends 'bases/base.html' %}
+{% extends 'bases/base_logado.html' %}
 
 {% block title %}  Menu do user {{current_user.nome}}  {% endblock %}
 
 {% block customCSS %} {% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul id="messages" class="list-unstyled">
+            {% for message in messages %}
+                <li class="alert alert-success">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <div class="container">
 
 <h1>Bem vindo {{ current_user.nome }}</h1>
 <a href="{{ url_for('logout') }}">Fazer Logout</a>
+<a href="{{ url_for('cadastro_produto') }}">Cadastrar Produto</a>
+<a href="{{ url_for('produtos') }}">Ver Produtos Cadastrados</a>
 {% endblock %}

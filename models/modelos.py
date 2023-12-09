@@ -36,7 +36,7 @@ class Usuarios(db.Model, UserMixin):
 
 class Produtos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(60), nullable=False, unique=True)
+    nome = db.Column(db.String(60), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
     preco = db.Column(db.Integer, nullable=False)
     descricao = db.Column(db.String(60), nullable=False)

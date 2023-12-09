@@ -1,0 +1,53 @@
+{% extends 'bases/base_logado.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style_lista.css')}}">
+{% endblock %}
+
+{% block content %}
+<h3 class="text-center text-muted mb-3"></h3>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul id="messages" class="list-unstyled">
+            {% for message in messages %}
+                <li class="alert alert-success">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        
+    
+        <div class="page-header pai__tit">
+            <h3 class="tit__principal">Produtos Cadastrados</h3>
+        </div>
+        <table class="table table-dark table-striped table-responsive table-bordered tabela ">
+            <thead class="thead-default">
+                <tr>
+                    <th>Nome do Produto</th>
+                    <th>Categoria do Produto</th>
+                    <th>Preço do Produto</th>
+                    <th>Descrição do Produto</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                    <tr>
+                        <td>{{produto.nome}}</td>
+                        <td>{{produto.categoria}}</td>
+                        <td>{{produto.preco}}</td>
+                        <td>{{produto.descricao}}</td>
+                        <td>
+                            <a class="btn btn-primary bts"  href="{{ url_for('editar_produtos', id=current_user.id) }}">Editar</a>
+                            <a class="btn btn-danger bts" href="{{ url_for('deletar_produto', id=current_user.id) }}">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
