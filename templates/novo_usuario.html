@@ -18,35 +18,35 @@
 
             <form class="flex-lg-row mx-auto col-6" method="post" action="{{url_for('cadastro_usuario')}}" enctype="multipart/form-data">
 
-                <div class="form-group">
-                    <label for="">Nome</label>
+                <div class="form-group formu">
+                    <label for="">Nome:</label>
                     <input type="text" name="nome" placeholder="Digite o seu nome" required class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="">Email</label>
+                <div class="form-group formu">
+                    <label for="">Email:</label>
                     <input type="email" name="email" placeholder="Digte o seu e-mail" required class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="">Endereço</label>
+                <div class="form-group formu">
+                    <label for="">Endereço:</label>
                     <input type="text" name="endereco" placeholder="Digite o seu endereço" required class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="">N° Casa</label>
+                <div class="form-group formu">
+                    <label for="">N° Casa:</label>
                     <input type="number" name="numcasa" placeholder="n° casa" required class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="">Bairro</label>
+                <div class="form-group formu">
+                    <label for="">Bairro:</label>
                     <input type="text" name="bairro" placeholder="Digite o bairro onde mora" required class="form-control">
                 </div>
-                <div class="form-group">
-                    <label for="">Senha</label>
+                <div class="form-group formu">
+                    <label for="">Senha:</label>
                     <input type="password" name="senha" placeholder="*******" required class="form-control">
                 </div>
                 
                 <br>
                 <div class="pai__botoes d-flex justify-content-around">
-                    <button type="submit" class="btn bg-info text-white btns my-2 my-sm-0  btns">Cadastrar</button>
-                    <a class="btn bg-dark text-white my-2 my-sm-0 btns" href="{{ url_for('index') }}">Voltar</a>
+                    <button type="submit" class="btn bg-info btns my-2 my-sm-0  btns">Cadastrar</button>
+                    <a class="btns my-2 my-sm-0" href="{{ url_for('index') }}">Voltar</a>
                 </div>
             </form>
     </div>

@@ -1,0 +1,11 @@
+{% extends 'bases/base.html' %}
+
+{% block title %}  Menu do user {{current_user.nome}}  {% endblock %}
+
+{% block customCSS %} {% endblock %}
+
+{% block content %}
+
+<h1>Bem vindo {{ current_user.nome }}</h1>
+<a href="{{ url_for('logout') }}">Fazer Logout</a>
+{% endblock %}

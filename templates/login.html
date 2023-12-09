@@ -1,0 +1,48 @@
+{% extends 'bases/base_login.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block customCSS %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo_login2.css')}}">
+{% endblock %}
+
+
+{% block content %}
+<div class="col-9 mx-auto ">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul id="messages" class="list-unstyled">
+            {% for message in messages %}
+                <li class="alert alert-success">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <h1 class="titulo__login">PANNI-TRIGO</h1>
+    <div class="containner__pai__logo">
+        <img src="{{ url_for('static', filename='img/pad_logo.png')}}" alt="imagem de um gameboy" class="imagem__filho__logo">
+    </div>
+    <div class="container__pai">
+        
+
+        <form  method="POST" action="{{url_for('login')}}">
+            <div class="form-group col-12 formu">
+                <label>E-mail:</label>
+                <input class="form-control" type="email" name="email" required placeholder="Digite seu e-mail">
+            </div>
+            <div class="form-group col-12 formu">
+                <label>Senha:</label>
+                <input class="form-control" type="password" name="senha" required placeholder="******">
+            </div>
+            <br>
+            <div class="pai__botoes">
+                <button class="btn bg-info btns" type="submit">Entrar</button>
+                <a class="btns" href="{{url_for('cadastro_usuario')}}">Cadastre-se</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
