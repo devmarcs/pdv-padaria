@@ -56,13 +56,15 @@ def editar_user():
     usuario.endereco = request.form['endereco']
     usuario.numcasa = request.form['numcasa']
     usuario.bairro = request.form['bairro']
-    usuario.senha = request.form['senha']
-    
-
+    nova_senha = request.form['senha']
+    if nova_senha:
+        senha_hash = bvrypt.generate_password_hash(nova_senha).decode('utf-8')
+        usuario.senha = senha_hash
+        
     db.session.add(usuario)
     db.session.commit()
     flash('Usuário atualizado com sucesso!')
-    return redirect(url_for('jogos'))
+    return redirect(url_for('editar_usuario', id=current_user.id))
 
 
 
@@ -125,7 +127,7 @@ def cadastro_produto():
             novo_produto = Produtos(nome, categoria, preco, descricao)
             db.session.add(novo_produto)
             db.session.commit()
-            return redirect(url_for('menu'))
+            return redirect(url_for('menu', id=current_user.id))
         flash('Produto cadastrado com sucesso!' )
     return render_template('novo_produto.html')
 

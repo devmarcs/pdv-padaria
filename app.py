@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -8,8 +9,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///padaria.sqlite3'
 app.config['SECRET_KEY'] = 'padaria321'
 
 login_manager = LoginManager(app)
-
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 from views import *
 

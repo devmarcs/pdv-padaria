@@ -26,6 +26,9 @@
     <div class="container__pai">
         
 
+       
+
+
         <form  method="POST" action="{{url_for('login')}}">
             <div class="form-group col-12 formu">
                 <label>E-mail:</label>
@@ -34,7 +37,9 @@
             <div class="form-group col-12 formu">
                 <label>Senha:</label>
                 <input class="form-control" type="password" name="senha" required placeholder="******">
+                <input type="checkbox" onclick="togglePassword()"> Mostrar Senha
             </div>
+            
             <br>
             <div class="pai__botoes">
                 <button class="btn bg-info btns" type="submit">Entrar</button>
