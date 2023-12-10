@@ -53,3 +53,7 @@ body {
     padding: 5px;
 }
 
+.aviso__produto {
+    padding: 1.5em 0 0 0;
+    text-align: center;
+}

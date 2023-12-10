@@ -1,8 +1,9 @@
 from flask import render_template,request, redirect,url_for, flash, session, send_from_directory
 from flask_login import login_user, logout_user,current_user, login_required
+from sqlalchemy.exc import IntegrityError
 from app import app, db
 from models.modelos import Usuarios, Produtos
-
+from app import bcrypt
 
 @app.route('/')
 def index():
@@ -31,10 +32,15 @@ def cadastro_usuario():
         senha = request.form['senha']
 
         if nome and email and endereco and numcasa and bairro and senha:
-            novo_usuario = Usuarios(nome, email, endereco, numcasa, bairro, senha)
-            db.session.add(novo_usuario)
-            db.session.commit()
-            return redirect(url_for('index'))
+            try:
+                novo_usuario = Usuarios(nome, email, endereco, numcasa, bairro, senha)
+                db.session.add(novo_usuario)
+                db.session.commit()
+                flash('Usuário Cadastrado com sucesso!')
+                return redirect(url_for('index'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('Erro: Já existe um usuário cadastrado com esse e-mail')
     return render_template('novo_usuario.html')
 
 
@@ -58,7 +64,7 @@ def editar_user():
     usuario.bairro = request.form['bairro']
     nova_senha = request.form['senha']
     if nova_senha:
-        senha_hash = bvrypt.generate_password_hash(nova_senha).decode('utf-8')
+        senha_hash = bcrypt.generate_password_hash(nova_senha).decode('utf-8')
         usuario.senha = senha_hash
         
     db.session.add(usuario)
@@ -120,20 +126,22 @@ def cadastro_produto():
         nome = request.form['nome']
         categoria = request.form['categoria']
         preco = request.form['preco']
+        quantidade = request.form['quantidade']
         descricao = request.form['descricao']
         
 
-        if nome and categoria and preco and descricao:
-            novo_produto = Produtos(nome, categoria, preco, descricao)
+        if nome and categoria and preco and quantidade and descricao:
+            novo_produto = Produtos(nome, categoria, preco, quantidade,  descricao)
             db.session.add(novo_produto)
             db.session.commit()
-            return redirect(url_for('menu', id=current_user.id))
-        flash('Produto cadastrado com sucesso!' )
+            flash('Produto cadastrado com sucesso!' )
+            return redirect(url_for('cadastro_produto', id=current_user.id))
     return render_template('novo_produto.html')
 
 
 #===== Tela editar produtos =====
 @app.route('/editar_produto/<int:id>')
+@login_required
 def editar_produtos(id):
     
     produto = Produtos.query.filter_by(id=id).first()
@@ -141,16 +149,19 @@ def editar_produtos(id):
 
 #===== Função que faz a edição dos produtos =====
 @app.route('/atualizar_produto', methods= ['POST']) 
+@login_required
 def atualizar_produto():
     produto = Produtos.query.filter_by(id=request.form['id']).first()
     produto.nome = request.form['nome']
     produto.categoria = request.form['categoria']
     produto.preco = request.form['preco']
+    produto.quantidade = request.form['quantidade']
     produto.descricao = request.form['descricao']
 
-    db.session.add(produtos)
+    db.session.add(produto)
     db.session.commit()
-    return redirect(url_for('editar_produtos'))
+    flash('Produto atualizado com sucesso!')
+    return redirect(url_for('editar_produtos', id=current_user.id))
 
 
 
@@ -167,11 +178,10 @@ def produto(id):
 @app.route('/deletar_produto/<int:id>')
 @login_required
 def deletar_produto(id):
-    
     Produtos.query.filter_by(id=id).delete()
     db.session.commit()
     flash('Produto deletado com sucesso!')
-    return redirect(url_for('menu'))
+    return redirect(url_for('menu', id=current_user.id))
 
 #================ Listar todos os produtos =====================
 @app.route('/produtos')

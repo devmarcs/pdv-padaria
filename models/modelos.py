@@ -39,12 +39,14 @@ class Produtos(db.Model):
     nome = db.Column(db.String(60), nullable=False)
     categoria = db.Column(db.String(50), nullable=False)
     preco = db.Column(db.Integer, nullable=False)
-    descricao = db.Column(db.String(60), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    descricao = db.Column(db.String(200), nullable=False)
 
-    def __init__(self, nome, categoria, preco, descricao):
+    def __init__(self, nome, categoria, preco, quantidade, descricao):
         self.nome = nome
         self.categoria = categoria
         self.preco = preco
+        self.quantidade = quantidade
         self.descricao = descricao 
 
     def __repr__(self):

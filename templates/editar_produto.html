@@ -7,15 +7,6 @@
 {% endblock %}
 
 {% block content %}
-{% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul id="messages" class="list-unstyled">
-            {% for message in messages %}
-                <li class="alert alert-success">{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
 <div class="row">
     <div class="col-6 mx-auto">
         <div class="container__pai__logo">
@@ -24,6 +15,18 @@
         <div class="container__pai__titulo">
             <h3 class="titulo__pag">Edição do Produto: {{ produto.nome }}</h3>
         </div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul id="messages" class="list-unstyled">
+            {% for message in messages %}
+                <li class="alert alert-success">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
             <form class="flex-lg-row mx-auto col-6" method="post" action="{{url_for('atualizar_produto', id=produto.id)}}">
                 <input type="hidden" name="id" value="{{produto.id}}">
                 <div class="form-group">
@@ -39,13 +42,17 @@
                     <input type="number" name="preco" id="preco" required class="form-control" value="{{produto.preco}}">
                 </div>
                 <div class="form-group">
+                    <label for="">Quantidade do Produto:</label>
+                    <input type="number" name="quantidade" id="quantidade" required class="form-control" value="{{produto.quantidade}}">
+                </div>
+                <div class="form-group">
                     <label for="">Descrição do Produto:</label>
                     <input type="text" name="descricao" id="descricao" required class="form-control" value="{{produto.descricao}}">
                 </div>
                 <br>
                 <div class="pai__botoes d-flex justify-content-around">
-                    <button type="submit" class="btn bg-info text-white btns my-2 my-sm-0  btns">Salvar</button>
-                    <a class="btn bg-dark text-white my-2 my-sm-0 btns" href="{{url_for('produtos', id=produto.id)}}">Voltar</a>
+                    <button type="submit" class="btn bg-info btns my-2 my-sm-0">Salvar</button>
+                    <a class="btns my-2 my-sm-0" href="{{url_for('produtos', id=produto.id)}}">Voltar</a>
                 </div>
             </form>
     </div>

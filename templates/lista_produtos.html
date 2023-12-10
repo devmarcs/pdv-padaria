@@ -30,6 +30,7 @@
                     <th>Nome do Produto</th>
                     <th>Categoria do Produto</th>
                     <th>Preço do Produto</th>
+                    <th>Quantidade</th>
                     <th>Descrição do Produto</th>
                     <th>Ações</th>
                 </tr>
@@ -40,6 +41,7 @@
                         <td>{{produto.nome}}</td>
                         <td>{{produto.categoria}}</td>
                         <td>{{produto.preco}}</td>
+                        <td>{{produto.quantidade}}</td>
                         <td>{{produto.descricao}}</td>
                         <td>
                             <a class="btn btn-primary bts"  href="{{ url_for('editar_produtos', id=current_user.id) }}">Editar</a>
@@ -49,5 +51,8 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if not produtos %}
+            <h2 class="aviso__produto">Ainda não existem produtos cadastrados</h2>
+        {% endif %}
     </div>
 {% endblock %}
