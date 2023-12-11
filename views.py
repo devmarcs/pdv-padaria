@@ -53,7 +53,15 @@ def editar_usuario(id):
 
 
 #================= Função que faz a Edição de Usuário ====================
-@app.route('/editar_user', methods= ['POST']) 
+from flask_bcrypt import Bcrypt
+
+# ...
+
+bcrypt = Bcrypt(app)
+
+# ...
+
+@app.route('/editar_user', methods=['POST'])
 @login_required
 def editar_user():
     usuario = Usuarios.query.filter_by(id=request.form['id']).first()
@@ -63,14 +71,16 @@ def editar_user():
     usuario.numcasa = request.form['numcasa']
     usuario.bairro = request.form['bairro']
     nova_senha = request.form['senha']
+    
     if nova_senha:
         senha_hash = bcrypt.generate_password_hash(nova_senha).decode('utf-8')
         usuario.senha = senha_hash
-        
+
     db.session.add(usuario)
     db.session.commit()
     flash('Usuário atualizado com sucesso!')
     return redirect(url_for('editar_usuario', id=current_user.id))
+
 
 
 
@@ -106,7 +116,7 @@ def login():
             login_user(usuario)
             return redirect(url_for('menu', id=current_user.id))
         
-        flash('Credenciais inválidas', 'error')
+        flash('Credenciais inválidas', 'erro')
     
     return render_template('login.html')
 
@@ -148,20 +158,36 @@ def editar_produtos(id):
     return render_template('editar_produto.html',produto= produto)
 
 #===== Função que faz a edição dos produtos =====
-@app.route('/atualizar_produto', methods= ['POST']) 
+@app.route('/atualizar_produto', methods=['POST'])
 @login_required
 def atualizar_produto():
-    produto = Produtos.query.filter_by(id=request.form['id']).first()
-    produto.nome = request.form['nome']
-    produto.categoria = request.form['categoria']
-    produto.preco = request.form['preco']
-    produto.quantidade = request.form['quantidade']
-    produto.descricao = request.form['descricao']
+    # Obtenha o ID do produto de forma segura usando 'get'
+    id_produto = request.form.get('id')
 
-    db.session.add(produto)
-    db.session.commit()
-    flash('Produto atualizado com sucesso!')
+    # Verifique se o ID do produto está presente no formulário
+    if id_produto is not None:
+        # Busque o produto no banco de dados
+        produto = Produtos.query.get(id_produto)
+
+        # Verifique se o produto foi encontrado
+        if produto:
+            # Atualize os campos do produto com os valores do formulário
+            produto.nome = request.form['nome']
+            produto.categoria = request.form['categoria']
+            produto.preco = request.form['preco']
+            produto.quantidade = request.form['quantidade']
+            produto.descricao = request.form['descricao']
+
+            # Salve as alterações no banco de dados
+            db.session.commit()
+
+            flash('Produto atualizado com sucesso!')
+            return redirect(url_for('editar_produtos', id=current_user.id))
+
+    # Caso 'id' não esteja presente ou o produto não seja encontrado
+    flash('Produto não encontrado ou ID não especificado.', 'error')
     return redirect(url_for('editar_produtos', id=current_user.id))
+
 
 
 
@@ -189,3 +215,31 @@ def deletar_produto(id):
 def produtos():
     lista = Produtos.query.order_by(Produtos.id)
     return render_template('lista_produtos.html',produtos= lista)
+
+
+@app.route('/vender_produto')
+@login_required
+def vender_produto():
+    return render_template('caixa.html')
+
+
+@app.route('/caixa', methods=['GET', 'POST'])
+@login_required
+def caixa():
+    mensagem = None
+    if request.method == 'POST':
+        nome_produto = request.form['nome']
+        quantidade_vendida = int(request.form['qtdVendida'])
+
+        produto = Produtos.query.filter_by(nome=nome_produto).first()
+
+        if produto:
+            if quantidade_vendida <= produto.quantidade:
+                produto.quantidade -= quantidade_vendida
+                valorTotal = produto.preco * quantidade_vendida 
+                db.session.commit()
+                mensagem = f"Estoque atualizado. Nova quantidade: {produto.quantidade}"
+                
+            else:
+                mensagem = "Quantidade vendida superior ao estoque disponível."
+    return render_template('caixa.html', mensagem=mensagem, nova_quantidade=produto.quantidade if produto else None, valorTotal=valorTotal if produto else None)

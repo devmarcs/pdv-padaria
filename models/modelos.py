@@ -1,4 +1,4 @@
-from app import db, login_manager
+from app import db, login_manager, bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -26,8 +26,14 @@ class Usuarios(db.Model, UserMixin):
         self.bairro = bairro
         self.senha = generate_password_hash(senha)
 
-    def verifica_senha(self, sen):
-        return check_password_hash(self.senha, sen  )
+    def set_senha(self, senha):
+        self.senha = bcrypt.generate_password_hash(senha).decode('utf-8')
+
+    def verifica_senha(self, senha):
+        return bcrypt.check_password_hash(self.senha, senha)
+
+    '''def verifica_senha(self, chave):
+        return check_password_hash(self.senha, chave)'''
 
     def __repr__(self):
         return '<Name %r>' % self.nome
