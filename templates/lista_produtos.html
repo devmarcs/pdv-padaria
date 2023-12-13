@@ -44,8 +44,8 @@
                         <td>{{produto.quantidade}}</td>
                         <td>{{produto.descricao}}</td>
                         <td>
-                            <a class="btn btn-primary bts"  href="{{ url_for('editar_produtos', id=current_user.id) }}">Editar</a>
-                            <a class="btn btn-danger bts" href="{{ url_for('deletar_produto', id=current_user.id) }}">Excluir</a>
+                            <a class="btn btn-primary bts"  href="{{ url_for('editar_produtos', id=produto.id) }}">Editar</a>
+                            <a class="btn btn-danger bts" href="{{ url_for('deletar_produto', id=produto.id) }}">Excluir</a>
                         </td>
                     </tr>
                 {% endfor %}

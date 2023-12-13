@@ -26,8 +26,8 @@
 <form method="post" action="{{ url_for('caixa') }}">
     <div class="container__digit__produt">
         <div class="form-group formu col-4">
-            <label for="">Digite o nome do produto:</label>
-            <input type="text" name="nome" placeholder="Digite o nome do produto" required class="form-control">
+            <label for="">Digite o código do produto:</label>
+            <input type="text" name="codigo" placeholder="Digite o código do produto" required class="form-control">
         </div>
     </div>
     <div class="container__digit__produt">
@@ -35,9 +35,16 @@
             <label for="">Digite a quantidade vendida:</label>
             <input type="number" name="qtdVendida" placeholder="Digite a quantidade do produto" required class="form-control">
             <br>
-            <input type="submit" value="Adicionar">
+            
         </div>
     </div>
+    <div class="container__digit__produt">
+        <div class="form-group formu col-4">
+            <label for="">Encerra a venda?:</label>
+            <input type="text" name="resposta" placeholder="Posso encerrar a venda?" required class="form-control">
+        </div>
+    </div>
+    <input type="submit" value="Adicionar">
 </form>
     {% if nova_quantidade %}
         <p>Nova Quantidade no Estoque: {{ nova_quantidade }}</p>

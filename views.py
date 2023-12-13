@@ -3,7 +3,11 @@ from flask_login import login_user, logout_user,current_user, login_required
 from sqlalchemy.exc import IntegrityError
 from app import app, db
 from models.modelos import Usuarios, Produtos
-from app import bcrypt
+from flask_bcrypt import Bcrypt
+
+
+bcrypt = Bcrypt(app)
+
 
 @app.route('/')
 def index():
@@ -53,13 +57,8 @@ def editar_usuario(id):
 
 
 #================= Função que faz a Edição de Usuário ====================
-from flask_bcrypt import Bcrypt
 
-# ...
 
-bcrypt = Bcrypt(app)
-
-# ...
 
 @app.route('/editar_user', methods=['POST'])
 @login_required
@@ -136,12 +135,13 @@ def cadastro_produto():
         nome = request.form['nome']
         categoria = request.form['categoria']
         preco = request.form['preco']
+        codigo = request.form['codigo']
         quantidade = request.form['quantidade']
         descricao = request.form['descricao']
         
 
         if nome and categoria and preco and quantidade and descricao:
-            novo_produto = Produtos(nome, categoria, preco, quantidade,  descricao)
+            novo_produto = Produtos(nome, categoria, preco, codigo, quantidade,  descricao)
             db.session.add(novo_produto)
             db.session.commit()
             flash('Produto cadastrado com sucesso!' )
@@ -175,6 +175,7 @@ def atualizar_produto():
             produto.nome = request.form['nome']
             produto.categoria = request.form['categoria']
             produto.preco = request.form['preco']
+            produto.codigo = request.form['codigo']
             produto.quantidade = request.form['quantidade']
             produto.descricao = request.form['descricao']
 
@@ -182,7 +183,7 @@ def atualizar_produto():
             db.session.commit()
 
             flash('Produto atualizado com sucesso!')
-            return redirect(url_for('editar_produtos', id=current_user.id))
+            return redirect(url_for('editar_produtos', id=current_user.id, id_produto=produto))
 
     # Caso 'id' não esteja presente ou o produto não seja encontrado
     flash('Produto não encontrado ou ID não especificado.', 'error')
@@ -228,18 +229,19 @@ def vender_produto():
 def caixa():
     mensagem = None
     if request.method == 'POST':
-        nome_produto = request.form['nome']
+        codigo_produto = request.form['codigo']
         quantidade_vendida = int(request.form['qtdVendida'])
 
-        produto = Produtos.query.filter_by(nome=nome_produto).first()
-
+        produto = Produtos.query.filter_by(codigo=codigo_produto).first()
         if produto:
-            if quantidade_vendida <= produto.quantidade:
-                produto.quantidade -= quantidade_vendida
-                valorTotal = produto.preco * quantidade_vendida 
-                db.session.commit()
-                mensagem = f"Estoque atualizado. Nova quantidade: {produto.quantidade}"
-                
-            else:
-                mensagem = "Quantidade vendida superior ao estoque disponível."
-    return render_template('caixa.html', mensagem=mensagem, nova_quantidade=produto.quantidade if produto else None, valorTotal=valorTotal if produto else None)
+            nome_produto = produto.nome
+            if produto:
+                if quantidade_vendida <= produto.quantidade:
+                    produto.quantidade -= quantidade_vendida
+                    valorTotal = produto.preco * quantidade_vendida 
+                    db.session.commit()
+                    mensagem = f"Estoque atualizado. Nova quantidade: {produto.quantidade}"
+                    
+                else:
+                    mensagem = "Quantidade vendida superior ao estoque disponível."
+    return render_template('caixa.html', mensagem=mensagem, nova_quantidade=produto.quantidade if produto else None, valorTotal=valorTotal if produto else None, nome_produto=nome_produto)
