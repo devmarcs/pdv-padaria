@@ -27,10 +27,10 @@ class Usuarios(db.Model, UserMixin):
         self.senha = generate_password_hash(senha)
 
     def set_senha(self, senha):
-        self.senha = bcrypt.generate_password_hash(senha).decode('utf-8')
+        self.senha = generate_password_hash(senha)
 
     def verifica_senha(self, senha):
-        return bcrypt.check_password_hash(self.senha, senha)
+        return check_password_hash(self.senha, senha)
 
     '''def verifica_senha(self, chave):
         return check_password_hash(self.senha, chave)'''
